@@ -128,7 +128,7 @@ This will open the Streamlit application in your web browser.
 
 # Commented out IPython magic to ensure Python compatibility.
 # %%writefile streamlit_app.py
-# 
+# pip install streamlit
 # import streamlit as st
 # import pandas as pd
 # import joblib
@@ -164,20 +164,25 @@ This will open the Streamlit application in your web browser.
 #         'isFlaggedFraud': isFlaggedFraud,
 #     }
 # 
-#     # Add one-hot encoded 'type' columns, initialized to False
+#     # Add one-hot encoded 'type' columns, initialized to 0 (integer)
 #     for col in ['type_CASH_OUT', 'type_DEBIT', 'type_PAYMENT', 'type_TRANSFER']:
-#         input_data[col] = False
+#         input_data[col] = 0
 # 
-#     # Set the appropriate 'type' column to True based on user selection
-#     if transaction_type != 'CASH_IN': # CASH_IN is the base case when drop_first=True, all others are False
+#     # Set the appropriate 'type' column to 1 based on user selection
+#     if transaction_type != 'CASH_IN': # CASH_IN is the base case when drop_first=True, all others are 0
 #         encoded_col_name = f'type_{transaction_type}'
 #         if encoded_col_name in input_data: # Ensure the column exists
-#             input_data[encoded_col_name] = True
+#             input_data[encoded_col_name] = 1
 # 
-#     # Create a DataFrame from the input data, ensuring correct column order
+#     # Create a DataFrame from the input data
 #     input_df = pd.DataFrame([input_data])
 # 
 #     # Reorder columns to match the training data
+#     # Ensure all feature columns are present, fill missing with 0 if necessary
+#     # This also handles cases where a type column might not have been created if drop_first=True
+#     for col in feature_columns:
+#         if col not in input_df.columns:
+#             input_df[col] = 0
 #     input_df = input_df[feature_columns]
 # 
 #     # Make prediction
